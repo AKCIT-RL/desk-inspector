@@ -2,6 +2,43 @@
 
 Sistema de percepção baseado em ROS 2 (Humble) para detecção de cubos coloridos sobre uma mesa, usando uma câmera Intel RealSense. O nó principal processa imagens RGB, detecta objetos por cor (vermelho, amarelo, verde, roxo) via segmentação HSV e publica as detecções como mensagens `vision_msgs/Detection2DArray`, além de uma imagem de depuração com as caixas desenhadas.
 
+## Motivação
+
+O repositório `desk-inspector` nasce com o objetivo de criar uma aplicação de acompanhamento e validação da execução de tarefas por plataformas robóticas, utilizando tecnologias de detecção de objetos e o rastreamento de sua posição ao longo do tempo. A detecção de cubos coloridos implementada hoje é o primeiro passo dessa percepção: a base sobre a qual as próximas camadas (rastreamento, validação e acompanhamento) serão construídas.
+
+## Fluxograma do processo
+
+```mermaid
+flowchart TD
+    A[Câmera RealSense] --> B[Captura de imagem RGB]
+    B --> C[Detecção de cubos por cor - HSV]
+    C --> D["Publicação: Detection2DArray + imagem de debug"]
+    D --> E[Rastreamento de posição ao longo do tempo]
+    E --> F[Validação da execução da tarefa]
+    F --> G[Acompanhamento / relatório do processo]
+
+    subgraph Implementado
+    A
+    B
+    C
+    D
+    end
+
+    subgraph "A discutir / planejado"
+    E
+    F
+    G
+    end
+```
+
+## Próximos passos (A discutir)
+
+- Rastreamento da posição dos objetos detectados ao longo do tempo (tracking entre frames).
+- Definição do modelo de validação: o que caracteriza sucesso, falha ou desvio de uma tarefa.
+- Integração com a lógica da plataforma robótica para correlacionar detecções com etapas esperadas da tarefa.
+- Persistência/histórico das detecções para auditoria do processo.
+- Interface de acompanhamento (dashboard/visualização) do nível de validação da tarefa.
+
 ## Estrutura do projeto
 
 ```
