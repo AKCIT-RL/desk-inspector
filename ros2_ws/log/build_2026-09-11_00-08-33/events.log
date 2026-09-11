@@ -1,0 +1,47 @@
+[0.000000] (-) TimerEvent: {}
+[0.000075] (table_perception) JobQueued: {'identifier': 'table_perception', 'dependencies': OrderedDict()}
+[0.000097] (table_perception) JobStarted: {'identifier': 'table_perception'}
+[0.099734] (-) TimerEvent: {}
+[0.199976] (-) TimerEvent: {}
+[0.234401] (table_perception) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/table_perception', 'build', '--build-base', '/workspace/ros2_ws/build/table_perception/build', 'install', '--record', '/workspace/ros2_ws/build/table_perception/install.log', '--install-scripts', '$base/lib/table_perception', '--single-version-externally-managed', 'install_data'], 'cwd': '/workspace/ros2_ws/src/table_perception', 'env': {'HOSTNAME': 'pmec4090', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'OLDPWD': '/workspace/ros2_ws', 'ROS_PYTHON_VERSION': '3', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':2', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_cyclonedds_cpp', 'ROS_DOMAIN_ID': '42', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'PWD': '/workspace/ros2_ws/build/table_perception', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/workspace/ros2_ws/build/table_perception/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[0.300148] (-) TimerEvent: {}
+[0.330374] (table_perception) StdoutLine: {'line': b'running egg_info\n'}
+[0.330660] (table_perception) StdoutLine: {'line': b'creating ../../build/table_perception/table_perception.egg-info\n'}
+[0.330718] (table_perception) StdoutLine: {'line': b'writing ../../build/table_perception/table_perception.egg-info/PKG-INFO\n'}
+[0.330931] (table_perception) StdoutLine: {'line': b'writing dependency_links to ../../build/table_perception/table_perception.egg-info/dependency_links.txt\n'}
+[0.330979] (table_perception) StdoutLine: {'line': b'writing entry points to ../../build/table_perception/table_perception.egg-info/entry_points.txt\n'}
+[0.331002] (table_perception) StdoutLine: {'line': b'writing requirements to ../../build/table_perception/table_perception.egg-info/requires.txt\n'}
+[0.331021] (table_perception) StdoutLine: {'line': b'writing top-level names to ../../build/table_perception/table_perception.egg-info/top_level.txt\n'}
+[0.331038] (table_perception) StdoutLine: {'line': b"writing manifest file '../../build/table_perception/table_perception.egg-info/SOURCES.txt'\n"}
+[0.331528] (table_perception) StdoutLine: {'line': b"reading manifest file '../../build/table_perception/table_perception.egg-info/SOURCES.txt'\n"}
+[0.331813] (table_perception) StdoutLine: {'line': b"writing manifest file '../../build/table_perception/table_perception.egg-info/SOURCES.txt'\n"}
+[0.331880] (table_perception) StdoutLine: {'line': b'running build\n'}
+[0.331905] (table_perception) StdoutLine: {'line': b'running build_py\n'}
+[0.332113] (table_perception) StdoutLine: {'line': b'creating /workspace/ros2_ws/build/table_perception/build\n'}
+[0.332168] (table_perception) StdoutLine: {'line': b'creating /workspace/ros2_ws/build/table_perception/build/lib\n'}
+[0.332192] (table_perception) StdoutLine: {'line': b'creating /workspace/ros2_ws/build/table_perception/build/lib/table_perception\n'}
+[0.332213] (table_perception) StdoutLine: {'line': b'copying table_perception/__init__.py -> /workspace/ros2_ws/build/table_perception/build/lib/table_perception\n'}
+[0.332234] (table_perception) StdoutLine: {'line': b'copying table_perception/color_detector.py -> /workspace/ros2_ws/build/table_perception/build/lib/table_perception\n'}
+[0.332254] (table_perception) StdoutLine: {'line': b'running install\n'}
+[0.332394] (table_perception) StdoutLine: {'line': b'running install_lib\n'}
+[0.332536] (table_perception) StdoutLine: {'line': b'creating /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception\n'}
+[0.332608] (table_perception) StdoutLine: {'line': b'copying /workspace/ros2_ws/build/table_perception/build/lib/table_perception/__init__.py -> /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception\n'}
+[0.332631] (table_perception) StdoutLine: {'line': b'copying /workspace/ros2_ws/build/table_perception/build/lib/table_perception/color_detector.py -> /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception\n'}
+[0.332810] (table_perception) StdoutLine: {'line': b'byte-compiling /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception/__init__.py to __init__.cpython-310.pyc\n'}
+[0.332878] (table_perception) StdoutLine: {'line': b'byte-compiling /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception/color_detector.py to color_detector.cpython-310.pyc\n'}
+[0.333322] (table_perception) StdoutLine: {'line': b'running install_data\n'}
+[0.333361] (table_perception) StdoutLine: {'line': b'creating /workspace/ros2_ws/install/table_perception/share/ament_index\n'}
+[0.333412] (table_perception) StdoutLine: {'line': b'creating /workspace/ros2_ws/install/table_perception/share/ament_index/resource_index\n'}
+[0.333448] (table_perception) StdoutLine: {'line': b'creating /workspace/ros2_ws/install/table_perception/share/ament_index/resource_index/packages\n'}
+[0.333469] (table_perception) StdoutLine: {'line': b'copying resource/table_perception -> /workspace/ros2_ws/install/table_perception/share/ament_index/resource_index/packages\n'}
+[0.333489] (table_perception) StdoutLine: {'line': b'copying package.xml -> /workspace/ros2_ws/install/table_perception/share/table_perception\n'}
+[0.333529] (table_perception) StdoutLine: {'line': b'creating /workspace/ros2_ws/install/table_perception/share/table_perception/launch\n'}
+[0.333548] (table_perception) StdoutLine: {'line': b'copying launch/detection.launch.py -> /workspace/ros2_ws/install/table_perception/share/table_perception/launch\n'}
+[0.333564] (table_perception) StdoutLine: {'line': b'running install_egg_info\n'}
+[0.334281] (table_perception) StdoutLine: {'line': b'Copying ../../build/table_perception/table_perception.egg-info to /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception-0.0.1-py3.10.egg-info\n'}
+[0.334518] (table_perception) StdoutLine: {'line': b'running install_scripts\n'}
+[0.343817] (table_perception) StdoutLine: {'line': b'Installing color_detector script to /workspace/ros2_ws/install/table_perception/lib/table_perception\n'}
+[0.343910] (table_perception) StdoutLine: {'line': b"writing list of installed files to '/workspace/ros2_ws/build/table_perception/install.log'\n"}
+[0.354312] (table_perception) CommandEnded: {'returncode': 0}
+[0.358610] (table_perception) JobEnded: {'identifier': 'table_perception', 'rc': 0}
+[0.358820] (-) EventReactorShutdown: {}

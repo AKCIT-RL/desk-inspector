@@ -1,0 +1,3 @@
+[console_scripts]
+color_detector = table_perception.color_detector:main
+

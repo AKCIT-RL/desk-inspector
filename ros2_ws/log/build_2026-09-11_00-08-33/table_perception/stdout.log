@@ -1,0 +1,37 @@
+running egg_info
+creating ../../build/table_perception/table_perception.egg-info
+writing ../../build/table_perception/table_perception.egg-info/PKG-INFO
+writing dependency_links to ../../build/table_perception/table_perception.egg-info/dependency_links.txt
+writing entry points to ../../build/table_perception/table_perception.egg-info/entry_points.txt
+writing requirements to ../../build/table_perception/table_perception.egg-info/requires.txt
+writing top-level names to ../../build/table_perception/table_perception.egg-info/top_level.txt
+writing manifest file '../../build/table_perception/table_perception.egg-info/SOURCES.txt'
+reading manifest file '../../build/table_perception/table_perception.egg-info/SOURCES.txt'
+writing manifest file '../../build/table_perception/table_perception.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /workspace/ros2_ws/build/table_perception/build
+creating /workspace/ros2_ws/build/table_perception/build/lib
+creating /workspace/ros2_ws/build/table_perception/build/lib/table_perception
+copying table_perception/__init__.py -> /workspace/ros2_ws/build/table_perception/build/lib/table_perception
+copying table_perception/color_detector.py -> /workspace/ros2_ws/build/table_perception/build/lib/table_perception
+running install
+running install_lib
+creating /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception
+copying /workspace/ros2_ws/build/table_perception/build/lib/table_perception/__init__.py -> /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception
+copying /workspace/ros2_ws/build/table_perception/build/lib/table_perception/color_detector.py -> /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception
+byte-compiling /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception/__init__.py to __init__.cpython-310.pyc
+byte-compiling /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception/color_detector.py to color_detector.cpython-310.pyc
+running install_data
+creating /workspace/ros2_ws/install/table_perception/share/ament_index
+creating /workspace/ros2_ws/install/table_perception/share/ament_index/resource_index
+creating /workspace/ros2_ws/install/table_perception/share/ament_index/resource_index/packages
+copying resource/table_perception -> /workspace/ros2_ws/install/table_perception/share/ament_index/resource_index/packages
+copying package.xml -> /workspace/ros2_ws/install/table_perception/share/table_perception
+creating /workspace/ros2_ws/install/table_perception/share/table_perception/launch
+copying launch/detection.launch.py -> /workspace/ros2_ws/install/table_perception/share/table_perception/launch
+running install_egg_info
+Copying ../../build/table_perception/table_perception.egg-info to /workspace/ros2_ws/install/table_perception/lib/python3.10/site-packages/table_perception-0.0.1-py3.10.egg-info
+running install_scripts
+Installing color_detector script to /workspace/ros2_ws/install/table_perception/lib/table_perception
+writing list of installed files to '/workspace/ros2_ws/build/table_perception/install.log'
