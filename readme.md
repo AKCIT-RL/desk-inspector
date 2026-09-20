@@ -1,6 +1,6 @@
 # desk inspector
 
-ros 2 (humble) perception system that detects colored cubes (red, yellow, green, purple) on a table using an intel realsense camera and hsv segmentation. it publishes detections as `vision_msgs/Detection2DArray` and a debug image with the bounding boxes drawn on it.
+ROS 2 (humble) perception system that detects colored cubes (red, yellow, green, purple) on a table using an intel realsense camera and hsv segmentation. it publishes detections as `vision_msgs/Detection2DArray` and a debug image with the bounding boxes drawn on it.
 
 this is the first step of a larger application for monitoring and validating tasks performed by robotic platforms (tracking and validation are still to be discussed).
 
