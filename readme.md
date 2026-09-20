@@ -67,7 +67,7 @@ desk-inspector/
 - Docker e Docker Compose
 - Câmera Intel RealSense conectada via USB
 - Linux com servidor X11 (para visualização de imagens com `rqt_image_view` / debug)
-- GPU NVIDIA + [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) (o `docker-compose.dev.yml` reserva um dispositivo NVIDIA)
+- GPU NVIDIA + [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) (o `docker-compose.dev.yml` reserva um dispositivo NVIDIA). Sem GPU NVIDIA, remova o bloco `deploy` e as variáveis `NVIDIA_*` do compose.
 
 ## Como rodar
 
@@ -87,6 +87,7 @@ Isso constrói a imagem (ROS 2 Humble Desktop + drivers RealSense + `cv_bridge`,
 - rede em modo `host` (comunicação ROS 2 direta com o host)
 - acesso privilegiado a `/dev` (necessário para a câmera USB)
 - `./ros2_ws` montado em `/workspace/ros2_ws` (edições locais refletem no container em tempo real)
+- `ROS_DOMAIN_ID=42` e `RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`: outras máquinas que precisem se comunicar com o container via ROS 2 devem usar os mesmos valores
 
 ### 3. Entrar no container
 
@@ -134,7 +135,9 @@ O launch sobe o nó `color_cube_detector` no namespace `/perception` com os par�
 | `output_topic`        | `/perception/detections`                   | Tópico de saída com as detecções          |
 | `debug_image_topic`   | `/perception/debug_image`                  | Imagem de depuração com caixas desenhadas |
 
-Para usar outros tópicos, edite os parâmetros em [detection.launch.py](ros2_ws/src/table_perception/launch/detection.launch.py) ou passe-os via linha de comando com `ros2 run`:
+> A área mínima do contorno (`min_contour_area`, 500 px²) e as faixas HSV de cada cor estão fixas em [color_detector.py](ros2_ws/src/table_perception/table_perception/color_detector.py) e não são configuráveis por parâmetro ROS. Para ajustá-las, edite o código.
+
+Para usar outros tópicos, edite os parâmetros em [detection.launch.py](ros2_ws/src/table_perception/launch/detection.launch.py) ou passe-os via linha de comando com `ros2 run` (nesse caso o nó roda sem o namespace `/perception`, então use tópicos absolutos):
 
 ```bash
 ros2 run table_perception color_detector --ros-args \
@@ -161,7 +164,7 @@ O nó [`ColorCubeDetector`](ros2_ws/src/table_perception/table_perception/color_
 
 1. Aplica operações morfológicas de abertura e fechamento para reduzir ruído.
 2. Encontra contornos externos e filtra os menores que `min_contour_area` (500 px²).
-3. Para os contornos válidos, calcula a caixa delimitadora e publica uma `Detection2D` com a classe (nome da cor) e uma pontuação de confiança proporcional à área relativa do objeto na imagem.
+3. Para os contornos válidos, calcula a caixa delimitadora e publica uma `Detection2D` com a classe (nome da cor) e um `score` igual à fração da imagem ocupada pela área do contorno (`área / (largura × altura)`). Esse valor **não é uma confiança estatística** e costuma ser bem baixo (ex.: ~0,002 para um contorno de 500 px² em 640×480); serve apenas como indicação de tamanho relativo.
 4. Desenha as caixas e rótulos na imagem de depuração.
 
 ## Testes
@@ -174,7 +177,7 @@ colcon test --packages-select table_perception
 colcon test-result --verbose
 ```
 
-Os testes incluídos (`test/`) verificam formatação (`flake8`, `pep257`) e cabeçalho de copyright, seguindo o padrão de pacotes `ament_python`.
+Os testes incluídos (`test/`) verificam formatação (`flake8`, `pep257`) e cabeçalho de copyright, seguindo o padrão de pacotes `ament_python`. Ainda não há testes da lógica de detecção, e o código atual pode não passar nas verificações de estilo (`flake8`/`pep257`) — rode `colcon test` para conferir.
 
 ## Encerrando o ambiente
 
