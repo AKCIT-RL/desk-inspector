@@ -1,186 +1,61 @@
-# Desk Inspector
+# desk inspector
 
-Sistema de percepção baseado em ROS 2 (Humble) para detecção de cubos coloridos sobre uma mesa, usando uma câmera Intel RealSense. O nó principal processa imagens RGB, detecta objetos por cor (vermelho, amarelo, verde, roxo) via segmentação HSV e publica as detecções como mensagens `vision_msgs/Detection2DArray`, além de uma imagem de depuração com as caixas desenhadas.
+ros 2 (humble) perception system that detects colored cubes (red, yellow, green, purple) on a table using an intel realsense camera and hsv segmentation. it publishes detections as `vision_msgs/Detection2DArray` and a debug image with the bounding boxes drawn on it.
 
-## Motivação
+this is the first step of a larger application for monitoring and validating tasks performed by robotic platforms (tracking and validation are still to be discussed).
 
-O repositório `desk-inspector` nasce com o objetivo de criar uma aplicação de acompanhamento e validação da execução de tarefas por plataformas robóticas, utilizando tecnologias de detecção de objetos e o rastreamento de sua posição ao longo do tempo. A detecção de cubos coloridos implementada hoje é o primeiro passo dessa percepção: a base sobre a qual as próximas camadas (rastreamento, validação e acompanhamento) serão construídas.
+## prerequisites
 
-## Fluxograma do processo
+- docker and docker compose
+- intel realsense camera connected via usb
+- linux with x11 (for `rqt_image_view`)
+- nvidia gpu + [nvidia container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). without a gpu, remove the `deploy` block and the `NVIDIA_*` variables from `docker-compose.dev.yml`.
 
-```mermaid
-flowchart TD
-    A[Câmera RealSense] --> B[Captura de imagem RGB]
-    B --> C[Detecção de cubos por cor - HSV]
-    C --> D["Publicação: Detection2DArray + imagem de debug"]
-    D --> E[Rastreamento de posição ao longo do tempo]
-    E --> F[Validação da execução da tarefa]
-    F --> G[Acompanhamento / relatório do processo]
-
-    subgraph Implementado
-    A
-    B
-    C
-    D
-    end
-
-    subgraph "A discutir / planejado"
-    E
-    F
-    G
-    end
-```
-
-## Próximos passos (A discutir)
-
-- Rastreamento da posição dos objetos detectados ao longo do tempo (tracking entre frames).
-- Definição do modelo de validação: o que caracteriza sucesso, falha ou desvio de uma tarefa.
-- Integração com a lógica da plataforma robótica para correlacionar detecções com etapas esperadas da tarefa.
-- Persistência/histórico das detecções para auditoria do processo.
-- Interface de acompanhamento (dashboard/visualização) do nível de validação da tarefa.
-
-## Estrutura do projeto
-
-```
-desk-inspector/
-├── .gitignore                      # Ignora build/, install/ e log/ (gerados pelo colcon)
-├── docker/
-│   └── dev/
-│       └── Dockerfile              # Imagem de desenvolvimento (ROS 2 Humble + RealSense)
-├── docker-compose.dev.yml          # Orquestração do ambiente de desenvolvimento
-└── ros2_ws/
-    └── src/
-        └── table_perception/       # Pacote ROS 2 (ament_python)
-            ├── launch/
-            │   └── detection.launch.py
-            ├── table_perception/
-            │   └── color_detector.py   # Nó de detecção por cor
-            ├── package.xml
-            ├── setup.py
-            └── test/
-```
-
-> `ros2_ws/build/`, `ros2_ws/install/` e `ros2_ws/log/` são gerados pelo `colcon build` (ver passo 4) e não fazem parte do repositório.
-
-## Pré-requisitos
-
-- Docker e Docker Compose
-- Câmera Intel RealSense conectada via USB
-- Linux com servidor X11 (para visualização de imagens com `rqt_image_view` / debug)
-- GPU NVIDIA + [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) (o `docker-compose.dev.yml` reserva um dispositivo NVIDIA). Sem GPU NVIDIA, remova o bloco `deploy` e as variáveis `NVIDIA_*` do compose.
-
-## Como rodar
-
-### 1. Permitir acesso ao display (uma vez por sessão)
+## how to run
 
 ```bash
+# 1. allow access to the display (once per session)
 xhost +local:docker
-```
 
-### 2. Construir e subir o container de desenvolvimento
-
-```bash
+# 2. start the container and enter it
 docker compose -f docker-compose.dev.yml up --build -d
-```
-
-Isso constrói a imagem (ROS 2 Humble Desktop + drivers RealSense + `cv_bridge`, `vision_msgs`, `rqt-image-view`, `foxglove-bridge`) e sobe o container `desk_inspector_dev` com:
-- rede em modo `host` (comunicação ROS 2 direta com o host)
-- acesso privilegiado a `/dev` (necessário para a câmera USB)
-- `./ros2_ws` montado em `/workspace/ros2_ws` (edições locais refletem no container em tempo real)
-- `ROS_DOMAIN_ID=42` e `RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`: outras máquinas que precisem se comunicar com o container via ROS 2 devem usar os mesmos valores
-
-### 3. Entrar no container
-
-```bash
 docker exec -it desk_inspector_dev bash
 ```
 
-O ambiente ROS 2 (`/opt/ros/humble/setup.bash`) e o workspace (`install/setup.bash`, se já compilado) já são carregados automaticamente no `.bashrc`.
-
-### 4. Compilar o workspace
-
-Dentro do container:
+inside the container:
 
 ```bash
+# 3. build the workspace
 cd /workspace/ros2_ws
 colcon build --symlink-install
 source install/setup.bash
-```
 
-### 5. Rodar a câmera RealSense
-
-Em um terminal dentro do container:
-
-```bash
+# 4. terminal 1: realsense camera
 ros2 launch realsense2_camera rs_launch.py \
   camera_namespace:=perception \
   camera_name:=table_cam
-```
 
-Isso deve publicar o tópico de imagem em `/perception/table_cam/color/image_raw`, que é o tópico de entrada padrão esperado pelo nó de detecção.
-
-### 6. Rodar o detector de cores
-
-Em outro terminal (dentro do container, com o workspace já com `source`):
-
-```bash
+# 5. terminal 2: color detector
 ros2 launch table_perception detection.launch.py
-```
 
-O launch sobe o nó `color_cube_detector` no namespace `/perception` com os parâmetros padrão:
-
-| Parâmetro            | Padrão                                     | Descrição                                 |
-|-----------------------|---------------------------------------------|--------------------------------------------|
-| `input_topic`         | `/perception/table_cam/color/image_raw`    | Tópico de imagem de entrada                |
-| `output_topic`        | `/perception/detections`                   | Tópico de saída com as detecções          |
-| `debug_image_topic`   | `/perception/debug_image`                  | Imagem de depuração com caixas desenhadas |
-
-> A área mínima do contorno (`min_contour_area`, 500 px²) e as faixas HSV de cada cor estão fixas em [color_detector.py](ros2_ws/src/table_perception/table_perception/color_detector.py) e não são configuráveis por parâmetro ROS. Para ajustá-las, edite o código.
-
-Para usar outros tópicos, edite os parâmetros em [detection.launch.py](ros2_ws/src/table_perception/launch/detection.launch.py) ou passe-os via linha de comando com `ros2 run` (nesse caso o nó roda sem o namespace `/perception`, então use tópicos absolutos):
-
-```bash
-ros2 run table_perception color_detector --ros-args \
-  -p input_topic:=/minha/camera/image_raw \
-  -p output_topic:=/minhas/deteccoes \
-  -p debug_image_topic:=/minha/debug_image
-```
-
-### 7. Visualizar os resultados
-
-```bash
+# 6. terminal 3: visualize (select /perception/debug_image)
 ros2 run rqt_image_view rqt_image_view
 ```
 
-Selecione o tópico `/perception/debug_image` para ver as detecções desenhadas sobre a imagem, ou inspecione `/perception/detections` diretamente:
+to see the detections as text: `ros2 topic echo /perception/detections`.
 
-```bash
-ros2 topic echo /perception/detections
-```
+to shut down: `docker compose -f docker-compose.dev.yml down`.
 
-## Como funciona a detecção
+## topics and parameters
 
-O nó [`ColorCubeDetector`](ros2_ws/src/table_perception/table_perception/color_detector.py) converte cada frame BGR recebido para o espaço de cor HSV e aplica faixas de matiz/saturação/valor pré-definidas para cada cor de interesse (vermelho, amarelo, verde, roxo). Para cada máscara de cor:
+| parameter           | default                                 | description                     |
+|---------------------|-----------------------------------------|---------------------------------|
+| `input_topic`       | `/perception/table_cam/color/image_raw` | input image                     |
+| `output_topic`      | `/perception/detections`                | detections (`Detection2DArray`) |
+| `debug_image_topic` | `/perception/debug_image`               | image with bounding boxes drawn |
 
-1. Aplica operações morfológicas de abertura e fechamento para reduzir ruído.
-2. Encontra contornos externos e filtra os menores que `min_contour_area` (500 px²).
-3. Para os contornos válidos, calcula a caixa delimitadora e publica uma `Detection2D` com a classe (nome da cor) e um `score` igual à fração da imagem ocupada pela área do contorno (`área / (largura × altura)`). Esse valor **não é uma confiança estatística** e costuma ser bem baixo (ex.: ~0,002 para um contorno de 500 px² em 640×480); serve apenas como indicação de tamanho relativo.
-4. Desenha as caixas e rótulos na imagem de depuração.
+to use different topics, edit [detection.launch.py](ros2_ws/src/table_perception/launch/detection.launch.py) or use `ros2 run table_perception color_detector --ros-args -p input_topic:=/other/topic` (use absolute topic names, since the node runs without the `/perception` namespace).
 
-## Testes
+the hsv ranges and the minimum contour area (500 px²) are hardcoded in [color_detector.py](ros2_ws/src/table_perception/table_perception/color_detector.py). each detection's `score` is the fraction of the image covered by the contour, not a statistical confidence.
 
-Dentro do container, com o workspace compilado:
-
-```bash
-cd /workspace/ros2_ws
-colcon test --packages-select table_perception
-colcon test-result --verbose
-```
-
-Os testes incluídos (`test/`) verificam formatação (`flake8`, `pep257`) e cabeçalho de copyright, seguindo o padrão de pacotes `ament_python`. Ainda não há testes da lógica de detecção, e o código atual pode não passar nas verificações de estilo (`flake8`/`pep257`) — rode `colcon test` para conferir.
-
-## Encerrando o ambiente
-
-```bash
-docker compose -f docker-compose.dev.yml down
-```
+the environment uses `ROS_DOMAIN_ID=42` and `RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`; other machines that need to communicate with the container must use the same values.
